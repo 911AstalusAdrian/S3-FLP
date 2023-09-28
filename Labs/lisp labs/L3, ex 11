@@ -1,0 +1,39 @@
+; 11. Write a function to determine the depth of a list
+; Solve using MAP functions
+
+;maxValue(a, b) = nil, if a and b are not numbers
+;		= a, if b is not a number
+;		= b, if a is not a number
+;		= a, if a > b
+;		= b, otherwise
+
+(defun maxValue (a b)
+ (cond
+	((and (not (numberp a)) (not (numberp b)))nil)
+	((not (numberp b)) a)
+	((not (numberp a)) b)
+	((> a b) a)
+	(t b)
+))
+
+;listMax(l1,l2,...,ln) = nil, if n = 0
+;		       = maxValue(l1, listMax(l2,...,ln)), otherwise
+
+(defun listMax(l)
+ (cond
+	((null l) nil)
+	(t (maxValue (car l) (listMax (cdr l))))
+))
+
+;findDepth(l1,l2,...ln, d) = d, if l is atom
+;			   = max(findDepth(l1,d),...,findDepth(ln,d)), otherwise (d = d+1 if l is a list)
+
+(defun findDepth (l d)
+ (cond
+	((atom l) d)
+	(t (apply #'listMax (list (mapcar #' (lambda (a) (findDepth a (+ 1 d))) l))))
+))
+
+(defun mainDepth (l)
+	(findDepth l 0)
+)
